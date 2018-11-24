@@ -1,8 +1,6 @@
 <template>
   <mt-swipe :auto="0" class="mtswipe">
-  <!-- <mt-swipe-item v-for="value in this.num">
 
-  </mt-swipe-item> -->
 
   <mt-swipe-item>
   <!-- <a href="" v-for="value in 10">{{value}}</a> -->
@@ -61,7 +59,8 @@ export default {
 <style lang="stylus" scoped>
 .mtswipe {
   height: 1.7rem;
-  background: pink;
+  width:100%;
+  padding:0 0.1rem
 }
 
 .Div {
@@ -69,6 +68,7 @@ export default {
   flex-wrap: wrap;
   height: 1.6rem;
   width: 100%;
+
 }
 </style>
 

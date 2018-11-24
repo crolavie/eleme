@@ -1,5 +1,5 @@
 <template>
-  <div class="item_list">
+  <div class="item_list" :id="item.restaurant.id" @click="godetail()">
     <div class="img">
       <img class="img2"  :src="item.restaurant.image_path|replaceAutoImg" alt="">
     </div>
@@ -63,9 +63,18 @@ export default {
   },
   data() {
     return{
-
+     id:""
     }
   },
+  methods:{
+    godetail(){
+      console.log(this.item.restaurant.id);
+      this.id = this.item.restaurant.id
+      //路由携带id 进行跳转到详情页面
+      this.$router.push({path:'/detail',query:{id:this.id}})
+      
+    }
+      }
 };
 </script>
 

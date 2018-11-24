@@ -28,7 +28,7 @@ export default {
     width 100%
     flex 1
     overflow hidden
-    // overflow scroll
+
     
 </style>
 

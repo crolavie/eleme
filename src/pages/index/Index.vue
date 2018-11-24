@@ -2,8 +2,9 @@
 <div id="scroll">
   <div>
   <div class="top">
-    <div class="location">上海市人民政府</div>
+    <div @click="goCity()" class="location">{{city}}</div>
     <div class="input" @click="goSearch()">
+      
      <input  type="text" readonly="true" placeholder="搜索饿了么商家、商品名称">
     </div>
   </div>
@@ -34,7 +35,7 @@
       </ul>
       
 <restaurantlist :restaurantlist="restaurantlist"></restaurantlist>
-<!-- <div>{{restaurantlist}}</div> -->
+
 </div>
 </div>
 
@@ -45,6 +46,7 @@
 //暂且写静态的,滚动事件后面处理,
 //当前页面进行网络数据请求，将banner图的数据传递给
 //swiper组件
+import {mapState} from 'vuex';
 import http from "utils/http";
 import SwipeList from "components/banner/SwipeList";
 import AutoList from "components/common/autolist";
@@ -52,6 +54,9 @@ import restaurantlist from "components/restaurant/restaurantList";
 import { scroll } from "utils/scroll";
 import Bscroll from "better-scroll";
 export default {
+  computed:{
+  ...mapState(['city'])
+  },
   data() {
     return {
       banner: [],
@@ -61,12 +66,14 @@ export default {
       test: Object
     };
   },
-  methods:{
-   goSearch(){
-     alert(1)
-    console.log(this.$router);
-     this.$router.push('/search')
-   }
+  methods: {
+    goSearch() {
+      console.log(this.$router);
+      this.$router.push("/search");
+    },
+    goCity(){
+      this.$router.push("/cities")
+    }
   },
   mounted() {
     let count = 8;
@@ -74,6 +81,7 @@ export default {
     let bscroll = new Bscroll("#scroll", {
       probeType: 1,
       click: true,
+      bounce:false,
       pullUpLoad: {
         threshold: 50
       }
@@ -85,16 +93,15 @@ export default {
         url:
           "/restapi/shopping/v3/restaurants?latitude=31.230378&longitude=121.473657&offset=" +
           count +
-          "&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=793f4acf7cdf43d5b9d12c8751eb8952&terminal=h5"
+          "&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=793f4acf7cdf43d5b9d12c8751eb8952&terminal=h5",
+           withCredentials:false
       });
       if (!!result) {
-        console.log(6666);
         this.restaurantlist.push(...result.items);
         console.log(this.restaurantlist);
 
         this.$nextTick(() => {
           bscroll.refresh();
-          this.$forceUpdate();
           count += 8;
           bscroll.finishPullUp();
         });
@@ -106,7 +113,6 @@ export default {
         });
       }
     });
-
   },
 
   components: {
@@ -115,10 +121,16 @@ export default {
     restaurantlist
   },
   async beforeCreate() {
+   var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+				if(keys) {
+					for(var i = keys.length; i--;)
+						document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+				}
     let result = await http({
       method: "get",
       url:
-        "/restapi/shopping/openapi/entries?latitude=31.23037&longitude=121.473701&templates[]=main_template&templates[]=favourable_template&templates[]=svip_template&terminal=h5"
+        "/restapi/shopping/openapi/entries?latitude=31.23037&longitude=121.473701&templates[]=main_template&templates[]=favourable_template&templates[]=svip_template&terminal=h5",
+        withCredentials:false
     });
     this.banner = result;
     this.xlqg = this.banner[1].entries;
@@ -126,7 +138,8 @@ export default {
     let autoPlayResource = await http({
       method: "get",
       url:
-        "/restapi/shopping/v2/banners?consumer=1&type=1&latitude=31.230378&longitude=121.473657"
+        "/restapi/shopping/v2/banners?consumer=1&type=1&latitude=31.230378&longitude=121.473657",
+        withCredentials:false
     });
     this.autolist = autoPlayResource;
 
@@ -134,7 +147,8 @@ export default {
     let restaurantSource = await http({
       method: "get",
       url:
-        "/restapi/shopping/v3/restaurants?latitude=31.230378&longitude=121.473657&offset=0&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=&terminal=h5"
+        "/restapi/shopping/v3/restaurants?latitude=31.230378&longitude=121.473657&offset=0&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=&terminal=h5",
+        withCredentials:false
     });
     this.restaurantlist = restaurantSource.items;
   }
@@ -180,15 +194,17 @@ export default {
   height: 1.5rem;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  padding 0 0.1rem
 
   &>div {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 50%;
+    background-color:#f6f6f6;
+    width: 49%;
     height: 100%;
   }
 }
@@ -201,13 +217,16 @@ h2 {
 }
 
 .menu_list {
-  border: 0 0 1px 0, #ff0;
+  border: 0 0 1px 0, skyblue;
   display: flex;
   line-height: 0.36rem;
   height: 0.36rem;
   font-size: 0.15rem;
   text-align: center;
   justify-content: space-between;
+  color:#666;
+  padding 0 0.1rem;
+  font-weight:600
 }
 
 #scroll {

@@ -9,14 +9,33 @@ import Order from 'pages/order/Order'
 import Discover from 'pages/discover/Discover'
 import Home from 'pages/Home'
 import Search from 'pages/search/Search'
+import Shop from 'pages/search/Shop'
+// import Detail from 'pages/detail/Detail'
+import Detail from 'pages/detail/Detail'
+import CityPicker from 'pages/citypicker/CityPicker'
 
 const routes = [{
     path: '/',
     redirect: '/home'
-  },{
+  },
+  {
+    path: '/cities',
+    component: CityPicker
+  },
+  {
+    name:'detail',
+    path:'/detail',
+    component:Detail
+  },
+  {
     name:'search',
     path:'/search',
-    component:Search
+    component:Search,
+    children:[{
+      path:'shop',
+      name:'shop',
+      component:Shop
+    }]
   },
   {
     name:'home',
@@ -28,6 +47,11 @@ const routes = [{
        name: 'index',
        path: 'index',
        component: Index
+      },
+      {
+        name:'order',
+        path:'order',
+        component:Order
       }
     ]
   } ,

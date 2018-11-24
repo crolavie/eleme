@@ -37,6 +37,7 @@ export default {
 .mtswipe
   width 100%
   height 0.9rem
+  padding:0 0.1rem
 img 
     width 3.75rem
     height 1rem
